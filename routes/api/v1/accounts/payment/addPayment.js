@@ -36,7 +36,7 @@ router.post("/",validateOnCreate, async(req,res)=>{
 
 // @type POST
 // @route /api/v1/accounts/payment/addPayment/:id
-// @des Create New Payment
+// @des update New Payment
 // @access Public
 
 router.post("/:id", async(req,res) => {
@@ -70,6 +70,39 @@ router.post("/:id", async(req,res) => {
         }) 
     }
 })
+
+// @type Delete
+// @route /api/v1/accounts/payment/addPayment/deleteOne/:id
+// @des Delete Payment
+// @access Public
+
+router.delete("/deleteOne/:id", async(req,res) => {
+
+    try{
+        const payment = await Payment.findByIdAndRemove(req.params.id);
+        if(!payment){
+            res.status(500).json({
+                message: "Payment not found",
+                variant: "error"
+            }) 
+        }
+
+        res.status(201).json({
+            message: "Payment Deleted Successfully",
+            variant: "success"
+        }) 
+
+    } 
+    catch(error){
+        console.log(error)
+        res.status(500).json({
+            message: "Internal Server error",
+            variant: "error"
+        }) 
+    }
+})
+
+
 
 async function getPaymentObj(req,type){
 
