@@ -8,13 +8,13 @@ const mongoose = require("mongoose");
 const upload = require("express-fileupload");
 
 // bring all route 
-const login = require("./routes/api/auth/login")
+const addPayment = require("./routes/api/v1/accounts/payment/addPayment")
 
 const app = express();
 app.use(upload({useTempFiles:true}))
 app.use(cors());
 // call all route
-app.use("/api/v1/auth/login",login)
+app.use("/api/v1/accounts/payment/addPayment",addPayment)
 
 // configure middleware
 app.use(express.urlencoded({extended:true,limit:"50mb"}));
