@@ -11,9 +11,9 @@ const {validateOnCreate, validateOnUpdate} = require("../../../../../validation/
 // @access Public
 router.post("/",validateOnCreate, async(req,res)=>{
 
-const paymentObj = await getPaymentObj(req,"create")
 
    try{
+    const paymentObj = await getPaymentObj(req,"create")
 
     await new Payment(paymentObj)
     .save();
@@ -32,6 +32,43 @@ const paymentObj = await getPaymentObj(req,"create")
     }) 
    }
 
+})
+
+// @type POST
+// @route /api/v1/accounts/payment/addPayment/:id
+// @des Create New Payment
+// @access Public
+
+router.post("/:id", async(req,res) => {
+
+    try{
+        const paymentObj = await getPaymentObj(req,"update")
+
+        const payment = await Payment.findOneAndUpdate(
+            {_id:req.params.id},
+            {$set: paymentObj},
+            {new:true}
+        )
+
+        if(!payment){
+            res.status(500).json({
+                message: "Payment not found",
+                variant: "error"
+            }) 
+        }
+
+        res.status(201).json({
+            message: "Payment Updated Successfully",
+            variant: "success"
+        }) 
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: "Internal Server error",
+            variant: "error"
+        }) 
+    }
 })
 
 async function getPaymentObj(req,type){
